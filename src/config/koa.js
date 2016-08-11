@@ -21,5 +21,5 @@ export default function configKoa(app) {
 // function (err){
 //   console.error(err)
 // }
-  app.use(morgan(config.logType)); //로그남기는 라이브러리리리
+  app.use(morgan(config.dev.logType)); //로그남기는 라이브러리리리
 }

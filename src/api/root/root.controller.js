@@ -16,6 +16,12 @@ export async function post(ctx, next) {
   await next();
 }
 
+// add: function *(next) {
+//   if('POST' != this.method) return yield next;
+//   var nutritionist = new Nutritionist(this.request.body);
+//   this.body = yield nutritionist.save();
+// },
+
 /**
 async : generator과 비슷하게 쓸수 있어
 co랑 generator?랑 연결해서 비동기 처리 쉽게.
