@@ -8,10 +8,8 @@ const User = new mongoose.Schema({
   email: String,
   password: String,
   univ: String,
-  userType: {
-    type: String,
-    enum: ['학생','알룸나이','기업','관리자']
-  },
+  userType: String, // ['인액터스 회원', '후원기업/기관 외']
+  enactusType: String, //['학생','알룸나이','오비']
   userImg: String,
   // active: String,
   name: String,
