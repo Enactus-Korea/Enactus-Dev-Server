@@ -4,17 +4,37 @@ import User from './user.model';
 import jwt from 'jwt-simple';
 import config from '../../config/env/common'
 import fs from 'fs';
+import AWS from 'aws-sdk'
+AWS.config.update({
+  accessKeyId: 'AKIAI66LJP4T2JKWSFVA',
+  secretAccessKey: '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'
+});
 
+let s3 = new AWS.S3({
+  signatureVersion: 'v4'
+});
+const myBucket = 'leeyu823';
 
 export async function createUser(ctx, next) {
-  const user = new User(ctx.request.body)
-  console.log(ctx.request.body)
-  console.log(typeof ctx.request.body)
-  // try {
-    await user.save();
-  // } catch (err) {
-  //   ctx.throw(422, err.message)
-  // }
+  let fields = ctx.request.body.fields,
+      files = ctx.request.body.files,
+      user = new User(fields);
+
+  const fileName = user._id.toString();
+  const fileType = files.userImg.type;
+  const s3Params = {
+    Bucket: myBucket,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read',
+    Body: fs.createReadStream(files.userImg.path)
+  };
+
+  let ret = await s3.upload(s3Params).promise();
+  user.userImg = ret.Location;
+  user.save();
+  ctx.body = ret.Location;
 }
 
 export async function allUsers(ctx) {
