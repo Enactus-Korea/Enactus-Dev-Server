@@ -1,14 +1,37 @@
 import Feed from './feed.model'
+import config from '../../config/env/common'
+import fs from 'fs';
+import AWS from 'aws-sdk'
+AWS.config.update({
+  accessKeyId: 'AKIAI66LJP4T2JKWSFVA',
+  secretAccessKey: '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'
+});
+
+let s3 = new AWS.S3({
+  signatureVersion: 'v4'
+});
+const myBucket = 'leeyu823';
 
 export async function createFeed(ctx, next) {
-  const feed = new Feed(ctx.request.body)
-  console.log(ctx.request.body)
-  console.log(typeof ctx.request.body)
-  try {
-    await feed.save();
-  } catch (err) {
-    ctx.throw(422, err.message)
-  }
+  let fields = ctx.request.body.fields,
+      files = ctx.request.body.files,
+      feed = new Feed(fields);
+      console.log(files)
+  const fileName = feed._id.toString();
+  const fileType = files.postImg.type;
+  const s3Params = {
+    Bucket: myBucket,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read',
+    Body: fs.createReadStream(files.postImg.path)
+  };
+
+  let ret = await s3.upload(s3Params).promise();
+  feed.postImg = ret.Location;
+  feed.save();
+  ctx.body = ret.Location;
 }
 
 export async function getFeeds(ctx) {

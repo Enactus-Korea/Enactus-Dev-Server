@@ -19,7 +19,7 @@ export async function createUser(ctx, next) {
   let fields = ctx.request.body.fields,
       files = ctx.request.body.files,
       user = new User(fields);
-
+        
   const fileName = user._id.toString();
   const fileType = files.userImg.type;
   const s3Params = {
