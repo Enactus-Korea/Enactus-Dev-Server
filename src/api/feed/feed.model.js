@@ -5,13 +5,13 @@ const Feed = new mongoose.Schema({
   typeOf: String, //전체공개 or 대나무숲
   name: String,
   univ: String,
-  userimg: { type: String, default: 'Avatar' },
+  userImg: { type: String, default: 'Avatar' },
   createdOn: { type: Date, default: Date.now },
   content: { type: String, required: true },
-  userImg: [String],
+  postImg: String,
   // location: { type: String, default: null },
-  likes:[{type: mongoose.Schema.Types.ObjectId, ref: 'users'}],
-  imageSource: { type: String, default: 'null' },
+  likes:[{type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
+  // imageSource: { type: String, default: 'null' },
   comment:[{
     c_no: Number,
     c_username: String,
