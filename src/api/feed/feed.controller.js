@@ -17,25 +17,33 @@ export async function createFeed(ctx, next) {
       files = ctx.request.body.files,
       feed = new Feed(fields);
       console.log(files)
-  const fileName = feed._id.toString();
-  const fileType = files.postImg.type;
-  const s3Params = {
-    Bucket: myBucket,
-    Key: fileName,
-    Expires: 60,
-    ContentType: fileType,
-    ACL: 'public-read',
-    Body: fs.createReadStream(files.postImg.path)
-  };
+  if(files.postImg){
+    const fileName = feed._id.toString();
+    const fileType = files.postImg.type;
+    const s3Params = {
+      Bucket: myBucket,
+      Key: fileName,
+      Expires: 60,
+      ContentType: fileType,
+      ACL: 'public-read',
+      Body: fs.createReadStream(files.postImg.path)
+    };
 
-  let ret = await s3.upload(s3Params).promise();
-  feed.postImg = ret.Location;
+    let ret = await s3.upload(s3Params).promise();
+    feed.postImg = ret.Location;
+  }
+
   feed.save();
-  ctx.body = ret.Location;
+  ctx.body = feed;
 }
 
 export async function getFeeds(ctx) {
-  const feed = await Feed.find().sort({posted: -1})
+  const feed = await Feed.find().sort({createdOn: -1})
+  ctx.body = { feed }
+}
+
+export async function getBambooFeeds(ctx) {
+  const feed = await Feed.find({typeOf: '대나무숲'}).sort({createdOn: -1})
   ctx.body = { feed }
 }
 
