@@ -4,6 +4,14 @@ import bcrypt from 'bcrypt' //비밀번호 암호화? 하는 것인듯
 import jwt from 'jsonwebtoken'
 
 
+const Projects = new mongoose.Schema({
+  name:String,
+  startedY: String,
+  startedM: String,
+  exitedY: String,
+  exitedM: String
+})
+
 const User = new mongoose.Schema({
   email: String,
   password: String,
@@ -16,7 +24,7 @@ const User = new mongoose.Schema({
   uuid: String,
   joined: Date,
   corporation: String,
-  projects: [String],
+  projects: [Projects],
   workType: String,
   selfIntro: String,
   createdOn: { type: Date, default: Date.now }

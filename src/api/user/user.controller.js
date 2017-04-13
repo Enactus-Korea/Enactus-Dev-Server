@@ -1,6 +1,7 @@
 'use strict';
 
 import User from './user.model';
+import Projects from '../projects/projects.model'
 import jwt from 'jwt-simple';
 import config from '../../config/env/common'
 import fs from 'fs';
@@ -19,7 +20,7 @@ export async function createUser(ctx, next) {
   let fields = ctx.request.body.fields,
       files = ctx.request.body.files,
       user = new User(fields);
-        
+
   const fileName = user._id.toString();
   const fileType = files.userImg.type;
   const s3Params = {
@@ -83,6 +84,44 @@ export async function isModifiedIntro(ctx) {
     console.log(email, selfIntro)
     const modifiled = await User.findOneAndUpdate({email}, {$set: {selfIntro}}, { new: true })
     ctx.body = { modifiled }
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = err;
+    console.log(err);
+  }
+}
+
+export async function isPushProjects(ctx) {
+  console.log(ctx.request.body);
+  try{
+    const _id = ctx.params._id
+    const modifiled = await User.update({_id}, {$push: { projects: ctx.request.body}})
+    ctx.body = { modifiled }
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = err;
+    console.log(err);
+  }
+}
+
+export async function isGetProjects(ctx) {
+  try {
+    let joined = await User.findOne({_id: ctx.params._id}).select('projects univ'),
+        detail = await Projects.find({univ: joined.univ}),
+        obj = {},
+        filterName = joined.projects.map(p => p.name);
+    detail.forEach(item => {
+      if(filterName.indexOf(item.name) !== -1){
+        if(!obj[item.name]){
+          obj[item.name] = {};
+        }
+        obj[item.name]= {
+          detail: item,
+          actived: joined.projects.find(p => p.name === item.name)
+        }
+      }
+    })
+    ctx.body = obj
   } catch (err) {
     ctx.status = 500;
     ctx.body = err;
