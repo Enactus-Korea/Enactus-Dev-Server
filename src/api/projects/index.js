@@ -13,7 +13,7 @@ const projects = router();
 
 projects.post('/', createProject);
 projects.get('/', getProjects);
-projects.get('/univ/:univ', isUnivProjects);
+projects.get('/:univ', isUnivProjects);
 projects.get('/needs/:needs', isPortionOfNeeds);
 
 
