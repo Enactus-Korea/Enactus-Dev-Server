@@ -66,12 +66,12 @@ export async function decLike(ctx) {
 }
 
 // 댓글 추가
-export async function addComment(ctx) {
-   console.log(ctx.request.boby);
-   const feed = ctx.request.body;
-   console.log(feed._id);
-   console.log(feed.comment);
-   ctx.body = await Feed.findByIdAndUpdate({_id: feed._id},{$push: {"comment": feed.comment}});
+export async function createFeedComment(ctx) {
+   ctx.body = await Feed.findByIdAndUpdate({_id: ctx.params.id},{$push: {"comment": ctx.request.body}});
+}
+
+export async function getFeedComment(ctx) {
+  ctx.body = await Feed.findOne({_id: ctx.params.id}).select('comment')
 }
 
 

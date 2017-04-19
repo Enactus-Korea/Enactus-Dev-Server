@@ -7,7 +7,8 @@ import {
   deleteFeed,
   incLike,
   decLike,
-  addComment,
+  createFeedComment,
+  getFeedComment,
   getBambooFeeds
 } from './feed.controller';
 import router from 'koa-router';
@@ -19,7 +20,8 @@ feed.post('/', createFeed);
 feed.get('/', getFeeds);
 feed.post('/incLike', incLike);
 feed.post('/decLike', decLike);
-feed.post('/addComment', addComment);
+feed.put('/:id/comment', createFeedComment);
+feed.get('/:id/comment', getFeedComment);
 feed.get('/bamboo', getBambooFeeds);
 
 
