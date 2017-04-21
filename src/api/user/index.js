@@ -1,11 +1,21 @@
 'use strict';
 
-import { createUser, allUsers, login, isFetchedLogInUser, isModifiedIntro,isPushProjects, isGetProjects } from './user.controller';  //getUser,
+import {
+  createUser,
+  allUsers,
+  login,
+  isFetchedLogInUser,
+  isModifiedIntro,
+  isPushProjects,
+  isGetProjects,
+  isGetSectionUser
+} from './user.controller';  //getUser,
 import router from 'koa-router';
 
 const user = router();
 
 user.get('/', allUsers);
+user.get('/fetch/by/univ/section', isGetSectionUser);
 user.post('/', createUser);
 // user.post('/getUser', getUser);
 user.post('/login', login)
