@@ -104,6 +104,27 @@ export async function isPushProjects(ctx) {
   }
 }
 
+export async function isGetSectionUser(ctx) {
+  let section = [], sectionUniv = [], allUsers = await User.find();
+  allUsers.forEach(u => {
+  if(sectionUniv.indexOf(u.univ)=== -1)
+  	sectionUniv.push(u.univ)
+  })
+  sectionUniv.sort().forEach(u => {
+  	let data = [], objU = {};
+  	allUsers.forEach(ua => {
+  		if(u === ua.univ){
+  			data.push(ua)
+  		}
+  	})
+  	objU['key'] = u;
+  	objU['data'] = data;
+  	section.push(objU)
+  })
+  ctx.body = section;
+}
+
+
 export async function isGetProjects(ctx) {
   try {
     let joined = await User.findOne({_id: ctx.params._id}).select('projects univ'),
