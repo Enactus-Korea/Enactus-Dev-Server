@@ -10,6 +10,7 @@ const Comment = new mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
 })
 
+
 const Feed = new mongoose.Schema({
   typeOf: String, //전체공개 or 대나무숲
   name: String,
@@ -20,7 +21,6 @@ const Feed = new mongoose.Schema({
   postImg: String,
   // location: { type: String, default: null },
   likes:[{type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-  // imageSource: { type: String, default: 'null' },
   comment:[Comment],
 }, {collection: 'feed'})
 

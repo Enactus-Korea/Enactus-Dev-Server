@@ -47,22 +47,21 @@ export async function getBambooFeeds(ctx) {
   ctx.body = { feed }
 }
 
-export async function incLike(ctx) {
+export async function handleLike(ctx) {
   const feed = ctx.request.body;
-  await Feed.findByIdAndUpdate({_id: feed._id},{$push: {"likes": feed.userId}});
-  // console.log("아이디 배열에 추가추가");
+  let existId = await Feed.findOne({_id: feed.feedId}).select('likes')
+  if(existId.likes.indexOf(feed.userId) === -1){
+    console.log("add");
+    await Feed.findByIdAndUpdate({_id: feed.feedId},{$push: {"likes": feed.userId}});
+  } else {
+    console.log("remove");
+    await Feed.findByIdAndUpdate({_id: feed.feedId},{$pull: {"likes": feed.userId}});
+  }
 }
-
-export async function decLike(ctx) {
-  // const feed = new Feed(ctx.request.body);
-  // const data = await Feed.findOne({_id: feed._id});
-  // console.log(data);
-  // const decCount = data.likes - 1;
-  //await Feed.update({_id: feed._id}, {likes: decCount});
-  console.log(ctx.request.body);
-  const feed = ctx.request.body;
-  await Feed.findByIdAndUpdate({_id: feed._id},{$pull: {"likes": feed.userId}});
-  console.log("감소감소");
+export async function getNumberFeedLike(ctx) {
+  let feed = await Feed.findOne({_id: ctx.params.feedId}).select('likes'),
+      num = feed.likes.length;
+  ctx.body = num
 }
 
 // 댓글 추가
