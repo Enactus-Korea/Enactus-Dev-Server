@@ -5,11 +5,11 @@ import {
   getFeeds,
   updateFeed,
   deleteFeed,
-  incLike,
-  decLike,
+  handleLike,
   createFeedComment,
   getFeedComment,
-  getBambooFeeds
+  getBambooFeeds,
+  getNumberFeedLike
 } from './feed.controller';
 import router from 'koa-router';
 
@@ -18,8 +18,8 @@ const feed = router();
 
 feed.post('/', createFeed);
 feed.get('/', getFeeds);
-feed.post('/incLike', incLike);
-feed.post('/decLike', decLike);
+feed.put('/handle/like', handleLike);
+feed.get('/handle/like/:feedId', getNumberFeedLike);
 feed.put('/:id/comment', createFeedComment);
 feed.get('/:id/comment', getFeedComment);
 feed.get('/bamboo', getBambooFeeds);
