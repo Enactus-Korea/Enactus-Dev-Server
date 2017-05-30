@@ -7,14 +7,14 @@ import config from '../../config/env/common'
 import fs from 'fs';
 import AWS from 'aws-sdk'
 AWS.config.update({
-  accessKeyId: 'AKIAI66LJP4T2JKWSFVA',
-  secretAccessKey: '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'
+  accessKeyId: 'AKIAJTTKJDDHBP6VA3TQ',
+  secretAccessKey: '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'
 });
 
 let s3 = new AWS.S3({
   signatureVersion: 'v4'
 });
-const myBucket = 'leeyu823';
+const myBucket = 'enactuskorea';
 
 export async function createUser(ctx, next) {
   let fields = ctx.request.body.fields,
